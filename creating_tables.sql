@@ -1,6 +1,5 @@
 CREATE TABLE classes (
-	rang INT NOT NULL,
-	name VARCHAR(70) PRIMARY KEY NOT NULL,
+	rang INT PRIMARY KEY,
 	size REAL,
 	displacement REAL,
 	cost_per_month MONEY NOT NULL,
@@ -11,7 +10,7 @@ CREATE TABLE classes (
 CREATE TABLE yachts(
 	id INT PRIMARY KEY,
 	name VARCHAR(70) NOT NULL,
-	class_name VARCHAR(70) REFERENCES classes(name), --может лучше ввести номер для классов
+	class_rang INT REFERENCES classes(rang),
 	placment VARCHAR(42) NOT NULL,
 	condition VARCHAR DEFAULT 'in order',
 	last_check DATE
@@ -38,3 +37,4 @@ CREATE TABLE contracts(
 	paid_until DATE,
 	CHECK((payment_scheme IN ('upfront', 'half upfront', 'monthly')) AND (STATUS IN ('open', 'closed')))
 )
+
