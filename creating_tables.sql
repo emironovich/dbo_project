@@ -11,7 +11,7 @@ CREATE TABLE yachts(
 	id INT PRIMARY KEY,
 	name VARCHAR(70) NOT NULL,
 	class_rang INT REFERENCES classes(rang),
-	placment VARCHAR(42) NOT NULL,
+	placment VARCHAR(42) NOT NULL DEFAULT 'in port',
 	condition VARCHAR DEFAULT 'in order',
 	last_check DATE
 )
