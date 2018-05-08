@@ -1,7 +1,7 @@
 CREATE TABLE classes (
 	rang INT PRIMARY KEY,
-	size REAL,
-	displacement REAL,
+	size REAL NOT NULL,
+	displacement REAL NOT NULL,
 	cost_per_month MONEY NOT NULL,
 	cost_per_day MONEY NOT NULL,
 	cost_per_day_overdue MONEY NOT NULL
