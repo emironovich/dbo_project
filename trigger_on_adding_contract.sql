@@ -33,9 +33,14 @@ BEGIN
 				 <0))
 		RAISERROR('Yacht needs checking', 15, 1);
 	ELSE
-		INSERT INTO contracts
-		SELECT yacht_id, client_id, openning_date, expected_closing_date, payment_scheme, actual_closing_date, paid_until FROM inserted;
-END
+		INSERT INTO contracts (contracts.yacht_id, contracts.client_id, contracts.openning_date, contracts.expected_closing_date, contracts.actual_closing_date, contracts.payment_scheme, contracts.paid_until)
+		SELECT				   inserted.yacht_id, inserted.client_id, inserted.openning_date, inserted.expected_closing_date, inserted.actual_closing_date, inserted.payment_scheme, inserted.paid_until FROM inserted;
 
+		UPDATE yachts
+		SET placement = 'with client id('+ (SELECT client_id FROM inserted) + ')'
+		WHERE id = (SELECT yacht_id FROM inserted)
+END;
+
+DISABLE TRIGGER checking_yacht_for_placing_and_condition ON contracts;
 ENABLE TRIGGER checking_yacht_for_placing_and_condition ON contracts;
---DROP TRIGGER checking_yacht_in_port;
+DROP TRIGGER checking_yacht_for_placing_and_condition;
