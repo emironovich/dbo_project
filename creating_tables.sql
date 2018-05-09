@@ -32,9 +32,9 @@ CREATE TABLE contracts(
 	client_id VARCHAR(20) REFERENCES clients(id),
 	openning_date DATE NOT NULL,
 	expected_closing_date DATE NOT NULL,
+	actual_closing_date DATE,
 	payment_scheme CHAR(13),
-	status CHAR(7),
 	paid_until DATE,
-	CHECK((payment_scheme IN ('upfront', 'half upfront', 'monthly')) AND (STATUS IN ('open', 'closed')))
+	CHECK(payment_scheme IN ('upfront', 'half upfront', 'monthly'))
 )
 
