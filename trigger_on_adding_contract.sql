@@ -9,6 +9,18 @@ BEGIN
 			   ON yachts.id = inserted.yacht_id
 			   WHERE placement <> 'in port'))
 		RAISERROR('Needed yacht not in port', 16, 1);
+	ELSE IF(EXISTS (SELECT placement
+			   FROM yachts
+			   RIGHT JOIN inserted
+			   ON yachts.id = inserted.yacht_id
+			   WHERE last_check IS NULL))
+		RAISERROR ('Yacht needs checking', 15, 1);
+	ELSE IF(EXISTS (SELECT placement
+			   FROM yachts
+			   RIGHT JOIN inserted
+			   ON yachts.id = inserted.yacht_id
+			   WHERE condition <> 'in order'))
+		RAISERROR('Needed yacht is no in order', 16, 1);
 	ELSE IF ((DATEDIFF(
 					month,
 					(SELECT last_check 
@@ -33,14 +45,16 @@ BEGIN
 				 <0))
 		RAISERROR('Yacht needs checking', 15, 1);
 	ELSE
+		BEGIN
 		INSERT INTO contracts (contracts.yacht_id, contracts.client_id, contracts.openning_date, contracts.expected_closing_date, contracts.actual_closing_date, contracts.payment_scheme, contracts.paid_until)
 		SELECT				   inserted.yacht_id, inserted.client_id, inserted.openning_date, inserted.expected_closing_date, inserted.actual_closing_date, inserted.payment_scheme, inserted.paid_until FROM inserted;
 
 		UPDATE yachts
 		SET placement = 'with client id('+ (SELECT client_id FROM inserted) + ')'
-		WHERE id = (SELECT yacht_id FROM inserted)
+		WHERE id = (SELECT yacht_id FROM inserted);
+		END
 END;
 
-DISABLE TRIGGER checking_yacht_for_placing_and_condition ON contracts;
 ENABLE TRIGGER checking_yacht_for_placing_and_condition ON contracts;
+DISABLE TRIGGER checking_yacht_for_placing_and_condition ON contracts;
 DROP TRIGGER checking_yacht_for_placing_and_condition;
