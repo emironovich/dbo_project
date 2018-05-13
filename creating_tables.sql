@@ -10,8 +10,8 @@ CREATE TABLE classes (
 CREATE TABLE yachts(
 	id INT PRIMARY KEY,
 	name VARCHAR(70) NOT NULL,
-	class_rang INT REFERENCES classes(rang),
-	placment VARCHAR(42) NOT NULL DEFAULT 'in port',
+	class_rang INT NOT NULL REFERENCES classes(rang) ON UPDATE CASCADE,
+	placement VARCHAR(42) NOT NULL DEFAULT 'in port',
 	condition VARCHAR(50) DEFAULT 'in order',
 	last_check DATE
 )
@@ -28,8 +28,8 @@ CREATE TABLE clients(
 
 CREATE TABLE contracts(
 	number INT IDENTITY(1,1) PRIMARY KEY,
-	yacht_id INT REFERENCES yachts(id),
-	client_id VARCHAR(20) REFERENCES clients(id),
+	yacht_id INT REFERENCES yachts(id) ON DELETE NO ACTION ON UPDATE CASCADE,
+	client_id VARCHAR(20) REFERENCES clients(id) ON DELETE NO ACTION ON UPDATE CASCADE,
 	openning_date DATE NOT NULL,
 	expected_closing_date DATE NOT NULL,
 	actual_closing_date DATE,
@@ -38,3 +38,4 @@ CREATE TABLE contracts(
 	CHECK(payment_scheme IN ('upfront', 'half upfront', 'monthly'))
 )
 
+DROP TABLE yachts;
