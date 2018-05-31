@@ -22,8 +22,8 @@ CREATE TABLE clients(
 	address VARCHAR(200) NOT NULL,
 	phone_number NUMERIC(11) NOT NULL,
 	bank_account VARCHAR(30),
-	times_overdue_payment INT DEFAULT 0,
-	times_damaged INT DEFAULT 0
+	times_damaged INT DEFAULT 0,
+	times_payment_overdue INT DEFAULT 0
 )
 
 CREATE TABLE contracts(
@@ -35,7 +35,8 @@ CREATE TABLE contracts(
 	actual_closing_date DATE,
 	payment_scheme CHAR(13),
 	paid_until DATE,
+	money_paid MONEY DEFAULT 0,
 	CHECK(payment_scheme IN ('upfront', 'half upfront', 'monthly'))
 )
 
-DROP TABLE yachts;
+DROP TABLE clients;

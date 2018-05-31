@@ -1,4 +1,4 @@
-CREATE TRIGGER checking_yacht_for_placing_and_condition ON contracts
+CREATE TRIGGER checking_yacht_for_placing_and_condition ON dbo.contracts
 INSTEAD OF INSERT AS
 BEGIN
 	IF((SELECT COUNT(*) FROM inserted) > 1)
@@ -20,7 +20,7 @@ BEGIN
 			   RIGHT JOIN inserted
 			   ON yachts.id = inserted.yacht_id
 			   WHERE condition <> 'in order'))
-		RAISERROR('Needed yacht is no in order', 16, 1);
+		RAISERROR('Needed yacht is not in order', 16, 1);
 	ELSE IF ((DATEDIFF(
 					month,
 					(SELECT last_check 
@@ -52,9 +52,9 @@ BEGIN
 		UPDATE yachts
 		SET placement = 'with client id('+ (SELECT client_id FROM inserted) + ')'
 		WHERE id = (SELECT yacht_id FROM inserted);
-		END
+		END;
 END;
 
-ENABLE TRIGGER checking_yacht_for_placing_and_condition ON contracts;
-DISABLE TRIGGER checking_yacht_for_placing_and_condition ON contracts;
-DROP TRIGGER checking_yacht_for_placing_and_condition;
+--ENABLE TRIGGER checking_yacht_for_placing_and_condition ON contracts;
+--DISABLE TRIGGER checking_yacht_for_placing_and_condition ON contracts;
+--DROP TRIGGER checking_yacht_for_placing_and_condition;
